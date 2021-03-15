@@ -2,16 +2,22 @@ package main
 
 import "fmt"
 
+type livingBeing interface {
+	alive() bool
+}
+
 type human interface {
 	breathe()
 	think()
 	eat()
 	sex() string
+	alive() bool
 }
 type animal interface {
 	breathe()
 	eat()
 	isCarnivore() bool
+	alive() bool
 }
 
 type vegetable interface {
@@ -27,6 +33,7 @@ type man struct {
 	thinking  bool
 	eating    bool
 	isMan     bool
+	living    bool
 }
 type woman struct {
 	man
@@ -42,6 +49,7 @@ func (h *man) sex() string {
 		return "woman"
 	}
 }
+func (h *man) alive() bool { return h.living }
 
 func HumanBreath(hu human) {
 	hu.breathe()
@@ -53,11 +61,13 @@ type dog struct {
 	breathing bool
 	eating    bool
 	carnivore bool
+	living    bool
 }
 
 func (d *dog) breathe()          { d.breathing = true }
 func (d *dog) eat()              { d.eating = true }
 func (d *dog) isCarnivore() bool { return d.carnivore }
+func (d *dog) alive() bool       { return d.living }
 
 func AnimalBreath(an animal) {
 	an.breathe()
@@ -71,14 +81,20 @@ func AnimalCarnivore(an animal) int {
 	return 0
 }
 
+func IAmAlive(s livingBeing) bool {
+	return s.alive()
+}
+
 func main() {
 	totalCarnivores := 0
 	Dogo := new(dog)
 	Dogo.carnivore = true
+	Dogo.living = true
 	AnimalBreath(Dogo)
 	totalCarnivores = +AnimalCarnivore(Dogo)
 
-	fmt.Printf("Total carnivores %d", totalCarnivores)
+	fmt.Printf("Total carnivores %d \n", totalCarnivores)
+	fmt.Printf("I am alive %t", IAmAlive(Dogo))
 	//Pedro := new(man)
 	//Pedro.isMan = true
 	//HumanBreath(Pedro)
